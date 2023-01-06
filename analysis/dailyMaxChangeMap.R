@@ -65,11 +65,11 @@ map(seq_along(1:nrow(stations)), function(i){
   perSeason = formatSeasonData(dataSeason)
   
   # make the plot
-  plot = makeHoverPlot(perSeason,row, fontsize=3)
+  plot = makeHoverPlot(perSeason,row, fontsize=2)
   
   # make plotplot
   plotPath = makePath(here(glue("output/graphs/hoverplots/{id}.png")))
-  ggsave(plotPath, plot, width=3, height=2)
+  ggsave(plotPath, plot, width=300, height=200, units="px")
   
 })
 

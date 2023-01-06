@@ -243,7 +243,7 @@ makeHoverPlot = function(dfPerSeason, row, fontsize=2){
       fakeDate == as.Date("2000-12-31")
     ) %>% 
     mutate(
-      label = glue("Mittelwert ({firstSeason} - {secondLastSeason})"),
+      label = glue("Mittelwert\n({firstSeason} - {secondLastSeason})"),
       color = meanColor,
       x = as.Date("2000-12-31"),
       y = data + 3
@@ -275,6 +275,7 @@ makeHoverPlot = function(dfPerSeason, row, fontsize=2){
     scale_color_identity() +
     scale_alpha_identity() +
     scale_y_continuous(labels = function(x) return(paste0(x, "°C"))) +
+    scale_x_date(expand = c(0,0)) +
     theme_void(base_size = fontsize) +
     geom_text(
       data = dfLabel,
@@ -296,7 +297,7 @@ makeHoverPlot = function(dfPerSeason, row, fontsize=2){
       axis.text.x = element_text(family = "Roboto"),
       axis.text.y = element_text(family = "Roboto"),
       panel.grid.major.y = element_line(size=.2, color="black"),
-      # plot.margin = margin(1,1,1,1,"cm")
+      plot.margin = margin(0,0,0,0,"cm")
     ) -> pl # + scale 
   
   
