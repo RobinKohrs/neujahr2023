@@ -232,23 +232,20 @@ makeHoverPlot = function(dfPerSeason, row, fontsize=2){
     mutate(
       label = season,
       color = ifelse(has2023, color2023, colorOtherLastSeason),
-      x = case_when(fakeDate < as.Date("2001-01-01") ~ fakeDate + 2,
-                    T ~ fakeDate - 5),
-      y = data - 1
+      x = as.Date("2000-12-03"),
+      y = data
     )
   
   labelMean = plotdf %>% 
-    filter(
-      season == "mean",
-      fakeDate == as.Date("2000-12-31")
-    ) %>% 
+    filter(season == lastSeason) %>% 
+    filter(fakeDate == max(fakeDate)) %>% 
     mutate(
-      label = glue("Mittelwert\n({firstSeason} - {secondLastSeason})"),
+      label = glue("´Ø {firstSeason} - {secondLastSeason}"),
       color = meanColor,
-      x = as.Date("2000-12-31"),
-      y = data + 3
+      x = as.Date("2000-12-03"),
+      y = data -3
     )
-  
+
   bind_rows(labelLast, labelMean) %>% 
     select(
       label, color, x,y

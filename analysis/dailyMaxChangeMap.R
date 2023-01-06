@@ -44,6 +44,8 @@ geo = st_as_sf(stations, coords=c("lon","lat"), crs=4326)
 #########
 
 map(seq_along(1:nrow(stations)), function(i){
+  
+  print(i)
 
   row = stations[i,] 
   id = row$id
@@ -61,32 +63,22 @@ map(seq_along(1:nrow(stations)), function(i){
   # else read and transform the files
   dataSeason = formatRawData(yearFiles)
   
+  if(nrow(dataSeason) == 0) return(NA)
+  
   # get the mean
   perSeason = formatSeasonData(dataSeason)
   
   # make the plot
-  plot = makeHoverPlot(perSeason,row, fontsize=2)
+  plot = makeHoverPlot(perSeason,row, fontsize=1)
   
   # make plotplot
   plotPath = makePath(here(glue("output/graphs/hoverplots/{id}.png")))
-  ggsave(plotPath, plot, width=300, height=200, units="px")
+  ggsave(plotPath, plot, width=200, height=130, units="px")
   
 })
 
 
 
-# tes thte plot
-stations %>% 
-  filter(id == 5901) %>%
-  st_as_sf(coords=c("lon", "lat"), crs=4326) %>% 
-  mutate(
-    x = st_coordinates(.)[,1],
-    y = st_coordinates(.)[,2],
-    photo = glue("https://github.com/RobinKohrs/neujahr2023/blob/master/output/graphs/hoverplots/{id}.png")
-  ) -> dat
-
-write_sf(dat, "~/Desktop/dat.geojson")
-write_csv(dat %>% st_drop_geometry(), "~/Desktop/dat.csv")
 
 
 
