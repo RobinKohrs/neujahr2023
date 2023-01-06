@@ -296,7 +296,7 @@ makeHoverPlot = function(dfPerSeason, row, fontsize=2){
       axis.text.x = element_text(family = "Roboto"),
       axis.text.y = element_text(family = "Roboto"),
       panel.grid.major.y = element_line(size=.2, color="black"),
-      plot.margin = margin(1,1,1,1,"cm")
+      # plot.margin = margin(1,1,1,1,"cm")
     ) -> pl # + scale 
   
   

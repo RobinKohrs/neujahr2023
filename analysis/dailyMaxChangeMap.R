@@ -65,21 +65,28 @@ map(seq_along(1:nrow(stations)), function(i){
   perSeason = formatSeasonData(dataSeason)
   
   # make the plot
-  plot = makeHoverPlot(perSeason,row, fontsize=2)
+  plot = makeHoverPlot(perSeason,row, fontsize=3)
   
   # make plotplot
   plotPath = makePath(here(glue("output/graphs/hoverplots/{id}.png")))
-  ggsave(plotPath, plot, width=4, height=2)
+  ggsave(plotPath, plot, width=3, height=2)
   
-  
-  
-  
-  
-   
 })
 
 
 
+# tes thte plot
+stations %>% 
+  filter(id == 5901) %>%
+  st_as_sf(coords=c("lon", "lat"), crs=4326) %>% 
+  mutate(
+    x = st_coordinates(.)[,1],
+    y = st_coordinates(.)[,2],
+    photo = glue("https://github.com/RobinKohrs/neujahr2023/blob/master/output/graphs/hoverplots/{id}.png")
+  ) -> dat
+
+write_sf(dat, "~/Desktop/dat.geojson")
+write_csv(dat %>% st_drop_geometry(), "~/Desktop/dat.csv")
 
 
 
