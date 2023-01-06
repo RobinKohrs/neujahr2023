@@ -240,7 +240,7 @@ makeHoverPlot = function(dfPerSeason, row, fontsize=2){
     filter(season == lastSeason) %>% 
     filter(fakeDate == max(fakeDate)) %>% 
     mutate(
-      label = glue("´Ø {firstSeason} - {secondLastSeason}"),
+      label = glue("Ø {firstSeason} - {secondLastSeason}"),
       color = meanColor,
       x = as.Date("2000-12-03"),
       y = data -3
