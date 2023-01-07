@@ -257,7 +257,7 @@ makeHoverPlot = function(dfPerSeason, row, fontsize=2, margin=.1){
   #######
   # Plot
   #######
-  baseDate = as.Date("2000-12-15")
+  baseDate = as.Date("2000-12-10")
   ggplot(plotdf) +
     geom_line(
       aes(
@@ -272,7 +272,7 @@ makeHoverPlot = function(dfPerSeason, row, fontsize=2, margin=.1){
     scale_color_identity() +
     scale_alpha_identity() +
     scale_y_continuous(labels = function(x) return(paste0(x, "°C"))) +
-    scale_x_date(expand = c(0,0), breaks = c(baseDate, baseDate+15, baseDate+31),
+    scale_x_date(expand = c(0,0), breaks = c(baseDate, baseDate+21, baseDate+41),
                  date_labels = "%d. %m") +
     theme_void(base_size = fontsize) +
     theme(
