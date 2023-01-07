@@ -5,6 +5,14 @@ library(glue)
 library(tidyverse)
 library(rajudas)
 
+stations %>% mutate(
+  ystart = lubridate::year(valid_from),
+  yend = ifelse(valid_to > Sys.Date(), lubridate::year(Sys.Date()), lubridate::year(valid_to)),
+) %>% glimpse %>% rowwise() %>% 
+  mutate(
+    l = length(ystart:yend)
+  ) %>% glimpse %>% pull(l) %>% sum
+
 
 # params ------------------------------------------------------------------
 output_dir = here("data_raw/dailyMaxEntireYear/")
@@ -52,9 +60,9 @@ selected_params = selected_params %>% paste0(collapse = ",")
 ids = split(stations, stations$id)
 
 library(future.apply)
-plan(multisession)
+plan(multisession, workers=12)
 # for(i in seq_along(ids)){
-future_lapply(seq_along(ids), function(i){
+lapply(seq_along(ids), function(i){
   
   output_dir = here("data_raw/dailyMaxEntireYear/")
   selected_params = c("tmax")
@@ -139,7 +147,7 @@ future_lapply(seq_along(ids), function(i){
    
   }
 })
-  
+x  
 
 
 

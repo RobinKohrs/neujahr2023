@@ -6,6 +6,8 @@ library(tidyverse)
 library(rajudas)
 library(data.table)
 library(mapview)
+library(rlist)
+
 
 source(here("analysis/utils.R"))
 
@@ -43,7 +45,11 @@ geo = st_as_sf(stations, coords=c("lon","lat"), crs=4326)
 # TEMPDATA FOR EACH STATION
 #########
 
-map(seq_along(1:nrow(stations)), function(i){
+
+stations %>% 
+  filter(is_active == T) -> stations
+
+data = map(seq_along(1:nrow(stations)), function(i){
   
   print(i)
 
@@ -67,15 +73,90 @@ map(seq_along(1:nrow(stations)), function(i){
   
   # get the mean
   perSeason = formatSeasonData(dataSeason)
+  perSeason[["id"]] = id
+  
+  if(!perSeason$has2023[[1]]){
+    print("has no 2023")
+    return(NA)
+  }
+  if(nrow(perSeason) == 0) return(NA)
+  
   
   # make the plot
-  plot = makeHoverPlot(perSeason,row, fontsize=1)
+  plot = makeHoverPlot(perSeason,row, fontsize=2)
   
   # make plotplot
   plotPath = makePath(here(glue("output/graphs/hoverplots/{id}.png")))
   ggsave(plotPath, plot, width=200, height=130, units="px")
   
+  return(perSeason)
+  
 })
+
+
+
+# make the map datea ------------------------------------------------------
+dataNoNa = data[!is.na(data)]
+
+geoData = imap(dataNoNa, function(d, i){
+  print(i)
+
+  day_of_diff = as.Date("2001-01-01")
+  day_of_diff_str = day_of_diff %>% str_replace_all("-", "")
+  
+  mean_and_2023 = d %>%
+    filter(season == last(season[season != "mean"]) |
+             season == "mean")
+  
+  
+  d %>%
+    filter(season != "mean")  %>% 
+    filter(data == max(data, na.rm = T)) %>%
+    mutate(
+      years= str_split(season, "/"),
+    ) %>% 
+    mutate(
+      month = lubridate::month(fakeDate),
+      day = lubridate::day(fakeDate),
+      year = case_when(month == 12 ~ sapply(years, "[[", 1),
+                       T ~ sapply(years, "[[", 2)),
+      data_max = data,
+      date_data_max = as.Date(glue("{year}-{month}-{day}"))
+    ) %>%
+    select(data_max,
+           date_data_max) -> dmax
+  
+  mean_and_2023 %>%
+    filter(fakeDate == day_of_diff) %>%
+    mutate("diff_{day_of_diff_str}" := data[season == "2022/2023"] - data[season ==
+                                                                            "mean"]) %>% filter(season == "2022/2023") %>%
+    left_join(stations, by = "id") %>%
+    select(data,
+           id,
+           matches("diff.*"),
+           name,
+           state,
+           lat,
+           lon,
+           altitude,
+           valid_from) %>%
+    st_as_sf(coords = c("lon", "lat"), crs = 4326) -> d
+ 
+  
+  dfFinal = bind_cols(d, dmax)   
+  
+  
+  
+ 
+})
+
+
+gData = bind_rows(geoData)
+mapview(gData, zcol="diff_20010101")
+
+
+
+
 
 
 
