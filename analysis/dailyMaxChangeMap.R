@@ -83,11 +83,11 @@ data = map(seq_along(1:nrow(stations)), function(i){
   
   
   # make the plot
-  plot = makeHoverPlot(perSeason,row, fontsize=2)
+  plot = makeHoverPlot(perSeason,row, fontsize=4)
   
   # make plotplot
   plotPath = makePath(here(glue("output/graphs/hoverplots/{id}.png")))
-  ggsave(plotPath, plot, width=200, height=130, units="px")
+  ggsave(plotPath, plot, width=200, height=120, units="px")
   
   return(perSeason)
   
@@ -152,7 +152,18 @@ geoData = imap(dataNoNa, function(d, i){
 
 
 gData = bind_rows(geoData)
+gDataCoords = gData %>% 
+  mutate(
+    x = st_coordinates(.)[,1],
+    y = st_coordinates(.)[,2]
+  )
 mapview(gData, zcol="diff_20010101")
+
+
+
+# save geodata ------------------------------------------------------------
+write_sf(gData, here(makePath("output/data/geodata/stationsDiff.geojson")))
+write_csv(gDataCoords, here(makePath("output/data/geodata/stationsDiff.csv")))
 
 
 
