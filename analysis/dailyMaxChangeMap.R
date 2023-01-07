@@ -87,7 +87,7 @@ data = map(seq_along(1:nrow(stations)), function(i){
   
   # make plotplot
   plotPath = makePath(here(glue("output/graphs/hoverplots/{id}.png")))
-  ggsave(plotPath, plot, width=200, height=120, units="px")
+  ggsave(plotPath, plot, width=200, height=110, units="px")
   
   return(perSeason)
   
