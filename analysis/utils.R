@@ -162,7 +162,7 @@ formatSeasonData = function(df){
 }
 
 
-makeHoverPlot = function(dfPerSeason, row, fontsize=2){
+makeHoverPlot = function(dfPerSeason, row, fontsize=2, margin=.1){
  
   # colors 
   colorMean = "black"
@@ -282,7 +282,7 @@ makeHoverPlot = function(dfPerSeason, row, fontsize=2){
       axis.text.x = element_text(family = "Roboto"),
       axis.text.y = element_text(family = "Roboto"),
       panel.grid.major.y = element_line(size=.2, color="black"),
-      plot.margin = margin(.2, .2, .2, .2,"cm")
+      plot.margin = margin(margin, margin, margin, margin,"cm")
     ) -> pl # + scale 
     
   gt = geom_text(

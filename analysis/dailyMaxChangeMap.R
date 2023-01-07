@@ -83,7 +83,7 @@ data = map(seq_along(1:nrow(stations)), function(i){
   
   
   # make the plot
-  plot = makeHoverPlot(perSeason,row, fontsize=4)
+  plot = makeHoverPlot(perSeason,row, fontsize=3, margin = 0.05)
   
   # make plotplot
   plotPath = makePath(here(glue("output/graphs/hoverplots/{id}.png")))
